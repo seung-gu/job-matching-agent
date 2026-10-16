@@ -4,34 +4,7 @@
 
 ## 1. 서비스 구성
 
-*PoC는 FE · API · 메인 DB만, worker와 Redis는 추후* <sub>(파랑 확정 · 주황 미정(회의에서 정함) · 주황 점선 추후(worker 방식으로 넘어갈 때) · 서비스를 따로 돌릴지 정함)</sub>
-
-```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "14px", "lineColor": "#9a9a92", "clusterBkg": "#f4f4f2", "clusterBorder": "#dcdcd6", "edgeLabelBackground": "#ffffff", "primaryTextColor": "#1f1f1f"}, "flowchart": {"wrappingWidth": 400}}}%%
-flowchart TB
-  subgraph SERVICES["서비스 (우리 코드)"]
-    FE["FE<br/>프레임워크 미정"]:::todo
-    BE["BE (API)<br/>PoC: 파이프라인도 실행"]:::done
-    WK["worker (추후)<br/>파이프라인 실행"]:::later
-  end
-  subgraph STORES["DB (저장소)"]
-    MAIN["메인 DB<br/>후보: MongoDB · PostgreSQL"]:::todo
-    REDIS["Redis (추후)<br/>작업 큐"]:::later
-  end
-  FE -->|HTTP| BE
-  BE --> MAIN
-  BE -.->|작업 넣기| REDIS
-  REDIS -.->|작업 꺼내기| WK
-  WK -.->|결과 저장| MAIN
-
-classDef done fill:#e8f0fc,stroke:#2f6fd6,stroke-width:2px,color:#1f1f1f
-classDef todo fill:#fff4dc,stroke:#f0a800,stroke-width:2px,color:#1f1f1f
-classDef later fill:#fffbf2,stroke:#f0a800,stroke-width:2px,stroke-dasharray:6 4,color:#1f1f1f
-classDef ext fill:#ffffff,stroke:#b5b5ad,color:#1f1f1f
-classDef code fill:#ececea,stroke:#d6d6d2,color:#1f1f1f
-classDef fake fill:#ffffff,stroke:#b5b5ad,stroke-dasharray:5 4,color:#1f1f1f
-classDef note fill:none,stroke:none,color:#555555
-```
+![서비스와 저장소 · 점선은 미정](img/devops1-services.svg)
 
 - **서비스 구성:** FE / BE(API) / worker를 각각 따로 돌릴지. API와 worker는 같은 코드에 실행 명령만 다르게 함(README 방침). worker를 분리하면 매칭이 오래 걸려도 API가 느려지지 않고, worker만 늘릴 수 있음
 - **PoC:** FE + BE 두 서비스만. worker와 Redis는 worker 방식으로 넘어갈 때 추가(BE-2)
@@ -42,35 +15,7 @@ classDef note fill:none,stroke:none,color:#555555
 
 PR부터 배포까지 무엇을 자동으로 돌릴지 정함. 지금 CI(GitHub Actions)는 PR과 main 푸시 때 Python lint·포맷 검사·pytest만 돌리고, 배포 자동화는 없음.
 
-*지금은 PR 검사만 자동이고, 배포와 정기 작업은 정해야 함* <sub>(파랑 지금 있음 · 주황 미정(회의에서 정함) · 주황 점선 추후)</sub>
-
-```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "14px", "lineColor": "#9a9a92", "clusterBkg": "#f4f4f2", "clusterBorder": "#dcdcd6", "edgeLabelBackground": "#ffffff", "primaryTextColor": "#1f1f1f"}, "flowchart": {"wrappingWidth": 400}}}%%
-flowchart TB
-  subgraph CI["CI · PR · main 푸시"]
-    direction LR
-    PR["PR<br/>브랜치 → main"]:::done --> CHECK["CI 검사<br/>ruff · pytest"]:::done --> REVIEW["리뷰 · 병합<br/>승인 1명 · CI 통과"]:::done --> MAIN["main<br/>merge commit"]:::done
-    CHECK --- ADD["추가: Test-2 · web 검사"]:::todo
-  end
-  subgraph CD["CD · 배포"]
-    direction LR
-    BUILD["빌드<br/>Docker 이미지 또는 소스"]:::later -.-> DEPLOY["배포<br/>자동 / 수동 승인"]:::later -.-> VERIFY["배포 후 확인<br/>/health · E2E"]:::later
-  end
-  subgraph CRON["정기 작업 · 스케줄"]
-    direction LR
-    SCHED["스케줄"]:::todo --> JOBS["사이트 형식 확인 · 품질 평가<br/>Test-2의 정기 실행 테스트"]:::todo
-  end
-  CI -.-> CD
-  CD ~~~ CRON
-
-classDef done fill:#e8f0fc,stroke:#2f6fd6,stroke-width:2px,color:#1f1f1f
-classDef todo fill:#fff4dc,stroke:#f0a800,stroke-width:2px,color:#1f1f1f
-classDef later fill:#fffbf2,stroke:#f0a800,stroke-width:2px,stroke-dasharray:6 4,color:#1f1f1f
-classDef ext fill:#ffffff,stroke:#b5b5ad,color:#1f1f1f
-classDef code fill:#ececea,stroke:#d6d6d2,color:#1f1f1f
-classDef fake fill:#ffffff,stroke:#b5b5ad,stroke-dasharray:5 4,color:#1f1f1f
-classDef note fill:none,stroke:none,color:#555555
-```
+![CI/CD 파이프라인 · 배포는 추후](img/devops2-cicd.svg)
 
 | 단계 | 지금 | 정할 것 |
 | --- | --- | --- |
@@ -122,34 +67,7 @@ PoC는 각자 로컬에서 실행함. 팀이 같이 쓰거나 밖에 보여 주�
 
 무엇을 기록하고 어디서 볼지 정함. LLM을 쓰므로 서버 로그 외에 LLM 호출 기록(입출력, 토큰, 비용, 지연, 도구 호출)도 남겨야 원인을 찾을 수 있음.
 
-*로그·오류·LLM 기록·지표를 한곳에 모으고, 기준을 넘으면 알림* <sub>(파랑 PoC에 있음 · 주황 미정(회의에서 정함))</sub>
-
-```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "14px", "lineColor": "#9a9a92", "clusterBkg": "#f4f4f2", "clusterBorder": "#dcdcd6", "edgeLabelBackground": "#ffffff", "primaryTextColor": "#1f1f1f"}, "flowchart": {"wrappingWidth": 400}}}%%
-flowchart LR
-  API["API<br/>요청 처리 · worker는 추후"]:::done
-  AGENT["agent<br/>LLM 호출 · 도구 호출"]:::done
-  EXT["외부 호출<br/>사이트 API · DB"]:::done
-  OTEL["OpenTelemetry 등으로 전송"]:::note
-  LOG["로그<br/>요청·작업 ID로 묶은 JSON"]:::todo
-  ERR["오류<br/>예외 · 스택 · 빈도"]:::todo
-  LLMLOG["LLM 호출 기록<br/>입출력 · 토큰 · 비용 · 지연"]:::todo
-  METRIC["지표<br/>응답 시간 · 실패 수 · 비용"]:::todo
-  DASH["대시보드 · 검색<br/>도구는 아래 표"]:::todo
-  ALARM["알림<br/>Slack · 메일"]:::todo
-  API & AGENT & EXT --- OTEL
-  OTEL --> LOG & ERR & LLMLOG & METRIC
-  LOG & ERR & LLMLOG & METRIC --> DASH
-  DASH -->|기준을 넘으면| ALARM
-
-classDef done fill:#e8f0fc,stroke:#2f6fd6,stroke-width:2px,color:#1f1f1f
-classDef todo fill:#fff4dc,stroke:#f0a800,stroke-width:2px,color:#1f1f1f
-classDef later fill:#fffbf2,stroke:#f0a800,stroke-width:2px,stroke-dasharray:6 4,color:#1f1f1f
-classDef ext fill:#ffffff,stroke:#b5b5ad,color:#1f1f1f
-classDef code fill:#ececea,stroke:#d6d6d2,color:#1f1f1f
-classDef fake fill:#ffffff,stroke:#b5b5ad,stroke-dasharray:5 4,color:#1f1f1f
-classDef note fill:none,stroke:none,color:#555555
-```
+![모니터링과 로그 · 회의에서 정함](img/devops3-monitoring.svg)
 
 | 대상 | 남길 것 | 후보 도구 |
 | --- | --- | --- |

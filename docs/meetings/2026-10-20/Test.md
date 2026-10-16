@@ -18,45 +18,7 @@
 
 LLM이 들어가면 같은 입력에도 결과가 달라질 수 있음. 그래서 코드가 맞는지 보는 테스트와 매칭 품질을 보는 평가를 나눔.
 
-*PR마다 도는 테스트는 사이트·LLM을 가짜로 바꾸고, 품질 평가만 실제 LLM을 씀* <sub>(흰색 점선 = 저장한 데이터 · 가짜 LLM · 흰색 실선 = 실제 호출 · 회색 = 테스트하는 코드)</sub>
-
-```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "14px", "lineColor": "#9a9a92", "clusterBkg": "#f4f4f2", "clusterBorder": "#dcdcd6", "edgeLabelBackground": "#ffffff", "primaryTextColor": "#1f1f1f"}, "flowchart": {"wrappingWidth": 400}}}%%
-flowchart TB
-  subgraph REAL["실제 흐름"]
-    direction LR
-    RS1["공고 사이트"]:::ext --> RS2["어댑터"]:::code --> RS3["서비스<br/>코드 단계"]:::code --> RS4["agent<br/>LLM 단계"]:::code --> RS5["LLM 제공사"]:::ext
-  end
-  subgraph UNIT["단위 테스트 · PR마다 CI"]
-    direction LR
-    U1["코드 단계만"]:::code
-  end
-  subgraph ADAPT["어댑터 테스트 · PR마다 CI"]
-    direction LR
-    AD1["저장한 응답"]:::fake --> AD2["어댑터 변환"]:::code
-  end
-  subgraph FLOW["흐름 테스트 · PR마다 CI"]
-    direction LR
-    FL1["저장한 응답"]:::fake --> FL2["어댑터 → 서비스 → agent"]:::code --> FL3["가짜 LLM"]:::fake
-  end
-  subgraph SITEF["사이트 형식 확인 · 정기 실행"]
-    direction LR
-    SF1["실제 사이트"]:::ext --> SF2["응답 형식"]:::code
-  end
-  subgraph QUAL["품질 평가 · 수동·정기 · 비용"]
-    direction LR
-    Q1["평가 셋 공고"]:::fake --> Q2["전체 흐름 → 정답 라벨과 비교"]:::code --> Q3["실제 LLM"]:::ext
-  end
-  REAL ~~~ UNIT ~~~ ADAPT ~~~ FLOW ~~~ SITEF ~~~ QUAL
-
-classDef done fill:#e8f0fc,stroke:#2f6fd6,stroke-width:2px,color:#1f1f1f
-classDef todo fill:#fff4dc,stroke:#f0a800,stroke-width:2px,color:#1f1f1f
-classDef later fill:#fffbf2,stroke:#f0a800,stroke-width:2px,stroke-dasharray:6 4,color:#1f1f1f
-classDef ext fill:#ffffff,stroke:#b5b5ad,color:#1f1f1f
-classDef code fill:#ececea,stroke:#d6d6d2,color:#1f1f1f
-classDef fake fill:#ffffff,stroke:#b5b5ad,stroke-dasharray:5 4,color:#1f1f1f
-classDef note fill:none,stroke:none,color:#555555
-```
+![테스트별 범위 · 가짜로 바꾸는 부분 · 회의에서 정함](img/test1-scope.svg)
 
 | 종류 | 확인하는 것 | LLM·네트워크 | 언제 |
 | --- | --- | --- | --- |

@@ -37,74 +37,13 @@
 
 ### agent를 붙였을 때 흐름
 
-*판단이 필요한 곳만 agent, 나머지 연결은 코드가 함* <sub>(주황 LLM 단계(agent) · 회색 코드 · 주황 점선 추후 · 흰색 외부·데이터)</sub>
-
-```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "14px", "lineColor": "#9a9a92", "clusterBkg": "#f4f4f2", "clusterBorder": "#dcdcd6", "edgeLabelBackground": "#ffffff", "primaryTextColor": "#1f1f1f"}, "flowchart": {"wrappingWidth": 400}}}%%
-flowchart TB
-  FILE["이력서 파일"]:::ext --> TXT["이력서 → 텍스트<br/>PDF · Word 변환"]:::code
-  TXT --> PROFILE["프로필 agent<br/>이력서 구조화 · 검색어(직무명)"]:::todo
-  CHAT["대화 agent (추후)<br/>빠진 정보를 묻고 반영"]:::later -.-> PROFILE
-  PROFILE --> SEARCH["출처 선택 · 검색 · 중복 제거<br/>회사 목록 + 여러 회사 API 전부"]:::code
-  LIST["사이트 · 회사 목록<br/>회사 → ATS 대응표"]:::ext --> SEARCH
-  ALERT["알림 추출 agent (추후)<br/>알림 메일 → 회사 · 직무 · 링크"]:::later -.-> SEARCH
-  SEARCH -->|검색| SITE["공고 사이트"]:::ext
-  SEARCH --> FILTER["1차 거르기 · 본문 가져오기<br/>제목·지역 규칙 · 상세 조회"]:::code
-  FILTER -->|본문| SITE
-  FILTER --> JOB["공고 정리 agent ×N<br/>요건 · 언어 · 연차 추출 · 공고마다"]:::todo
-  JOB --> COND["조건 필터<br/>언어 필수 · 지역 · 연차를 프로필과 비교"]:::code
-  COND --> MATCH["매칭 agent ×N<br/>요건별 충족 판정 · 근거 · 공고마다"]:::todo
-  MATCH --> SCORE["점수 · 정렬 · 상위 N개<br/>점수: 규칙 합산 또는 LLM (2번)"]:::code
-  SCORE -.-> EVAL["평가 셋 비교 (추후)<br/>정답 라벨과 비교"]:::later
-  SCORE --> SAVE["결과 저장 · 화면<br/>DB · FE"]:::code
-  SAVE --> USER["사용자 (화면)"]:::ext
-
-classDef done fill:#e8f0fc,stroke:#2f6fd6,stroke-width:2px,color:#1f1f1f
-classDef todo fill:#fff4dc,stroke:#f0a800,stroke-width:2px,color:#1f1f1f
-classDef later fill:#fffbf2,stroke:#f0a800,stroke-width:2px,stroke-dasharray:6 4,color:#1f1f1f
-classDef ext fill:#ffffff,stroke:#b5b5ad,color:#1f1f1f
-classDef code fill:#ececea,stroke:#d6d6d2,color:#1f1f1f
-classDef fake fill:#ffffff,stroke:#b5b5ad,stroke-dasharray:5 4,color:#1f1f1f
-classDef note fill:none,stroke:none,color:#555555
-```
+![기능별 흐름 · agent 3개(추후 2개) + 코드 · 회의에서 정함](img/llm1-flow.svg)
 
 ## 2. 흐름과 포트 (자율성)
 
 순서와 판단을 코드가 정할지 agent가 정할지 정함. 포트 범위도 이 선택을 따라감: A·B는 agent 역할마다 포트를 두는 역할 단위, C는 match() 하나만 두는 일 단위임.
 
-*A에서 C로 갈수록 코드가 정하는 범위가 줄고 agent가 정하는 범위가 늘어남* <sub>(주황 agent 역할 = 포트 · 회색 코드 · 주황 점선 추후 · 흰색 도구 · 파란 테두리 현재 PoC · 각 포트는 프레임워크별 어댑터(pydantic-ai, LangGraph 등)로 구현함 (LLM-3))</sub>
-
-```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "14px", "lineColor": "#9a9a92", "clusterBkg": "#f4f4f2", "clusterBorder": "#dcdcd6", "edgeLabelBackground": "#ffffff", "primaryTextColor": "#1f1f1f"}, "flowchart": {"wrappingWidth": 400}}}%%
-flowchart LR
-  subgraph A["A. 워크플로"]
-    direction TB
-    A1["프로필 agent"]:::todo --> A2["검색 · 거르기"]:::code --> A3["공고 정리 agent ×N"]:::todo --> A4["조건 필터"]:::code --> A5["매칭 agent ×N"]:::todo --> A6["점수 · 정렬"]:::code
-    A6 ~~~ A7["추후: 대화 · 알림 추출 agent"]:::later ~~~ AP["코드가 순서·검색·거르기를 정함<br/>포트: 역할 단위 (agent마다) · LLM-1 구성"]:::note
-  end
-  subgraph B["B. 단계별 agent · 현재 PoC"]
-    direction TB
-    B1["프로필 agent<br/>이력서에서 직무·근무지 파악"]:::todo --> B2["검색 agent<br/>도구로 출처·조건을 골라 검색"]:::todo --> B3["매칭 agent<br/>도구로 공고를 읽고 점수"]:::todo
-    B2 --> BT["도구: MCP 서버 (LLM-4)"]:::ext
-    B3 --> BT
-    BT ~~~ BP["코드는 단계만 나눔<br/>포트: 역할 단위"]:::note
-  end
-  subgraph C["C. agent 하나"]
-    direction TB
-    C1["agent 하나<br/>이력서 파악 · 검색 조건 결정<br/>공고 읽기·거르기 · 점수 매기기<br/>순서도 agent가 정함"]:::todo --> CT["도구: MCP 서버 (LLM-4)"]:::ext
-    CT ~~~ CP["agent가 순서까지 정함<br/>포트: 일 단위 · match() 하나"]:::note
-  end
-  A ~~~ B ~~~ C
-  style B stroke:#2f6fd6,stroke-width:3px
-
-classDef done fill:#e8f0fc,stroke:#2f6fd6,stroke-width:2px,color:#1f1f1f
-classDef todo fill:#fff4dc,stroke:#f0a800,stroke-width:2px,color:#1f1f1f
-classDef later fill:#fffbf2,stroke:#f0a800,stroke-width:2px,stroke-dasharray:6 4,color:#1f1f1f
-classDef ext fill:#ffffff,stroke:#b5b5ad,color:#1f1f1f
-classDef code fill:#ececea,stroke:#d6d6d2,color:#1f1f1f
-classDef fake fill:#ffffff,stroke:#b5b5ad,stroke-dasharray:5 4,color:#1f1f1f
-classDef note fill:none,stroke:none,color:#555555
-```
+![흐름과 포트 · A·B·C · 회의에서 정함](img/llm2-autonomy.svg)
 
 현재 PoC는 B임. 아래는 B에서 A 쪽 또는 C 쪽으로 옮길 때의 비교임.
 
@@ -123,23 +62,7 @@ classDef note fill:none,stroke:none,color:#555555
 
 먼저 구현 하나로 개발함. 자원이 남으면 나머지 구현(프레임워크 없이, pydantic-ai, LangGraph 중)을 추가해 같은 평가 셋으로 비교함(추후). 나중에 구현을 추가할 수 있게 포트를 둠.
 
-*같은 평가 셋으로 구현 3개를 돌려 점수를 비교함* <sub>(파랑 확정 · 주황 미정(포트 범위는 회의에서 정함))</sub>
-
-```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "14px", "lineColor": "#9a9a92", "clusterBkg": "#f4f4f2", "clusterBorder": "#dcdcd6", "edgeLabelBackground": "#ffffff", "primaryTextColor": "#1f1f1f"}, "flowchart": {"wrappingWidth": 400}}}%%
-flowchart LR
-  EV["평가 셋<br/>공고 약 30개 + 정답"]:::done --> PORT["포트<br/>match()"]:::todo
-  PORT --> I1["직접 구현<br/>프레임워크 없이 SDK + 코드"]:::todo & I2["pydantic-ai<br/>타입 기반 agent"]:::todo & I3["LangGraph<br/>그래프 워크플로"]:::todo
-  I1 & I2 & I3 --> SC["점수 비교<br/>매칭 결과 vs 정답"]:::done
-
-classDef done fill:#e8f0fc,stroke:#2f6fd6,stroke-width:2px,color:#1f1f1f
-classDef todo fill:#fff4dc,stroke:#f0a800,stroke-width:2px,color:#1f1f1f
-classDef later fill:#fffbf2,stroke:#f0a800,stroke-width:2px,stroke-dasharray:6 4,color:#1f1f1f
-classDef ext fill:#ffffff,stroke:#b5b5ad,color:#1f1f1f
-classDef code fill:#ececea,stroke:#d6d6d2,color:#1f1f1f
-classDef fake fill:#ffffff,stroke:#b5b5ad,stroke-dasharray:5 4,color:#1f1f1f
-classDef note fill:none,stroke:none,color:#555555
-```
+![구현 3개 점수 비교 (추후) · 포트 범위(주황)는 회의에서 정함](img/llm3-compare.svg)
 
 | 후보 | 성격 | 이 작업에 맞는 정도 (A 워크플로 / C agent 하나) |
 | --- | --- | --- |
@@ -174,36 +97,7 @@ classDef note fill:none,stroke:none,color:#555555
 
 MCP 서버는 도구(공고 조회, 이력 검색 등)를 표준 규격으로 내놓는 서버임. LLM-3에서 구현을 여러 개 만들면, 모든 구현이 같은 도구를 써야 점수 비교가 공정해짐.
 
-*MCP를 두면 도구 정의가 한 곳, 안 두면 구현마다 래퍼가 생김* <sub>(주황 미정(회의에서 정함) · 파랑 공통 코드 · 흰색 외부)</sub>
-
-```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "14px", "lineColor": "#9a9a92", "clusterBkg": "#f4f4f2", "clusterBorder": "#dcdcd6", "edgeLabelBackground": "#ffffff", "primaryTextColor": "#1f1f1f"}, "flowchart": {"wrappingWidth": 400}}}%%
-flowchart LR
-  subgraph WITH["MCP를 둘 때"]
-    direction TB
-    W1["직접 구현"]:::todo & W2["pydantic-ai"]:::todo & W3["LangGraph"]:::todo --> WM["MCP 서버<br/>도구 정의 한 곳 (예: 공고 조회 · 이력 검색)"]:::todo
-    WM --> WS["공고 사이트 · API · DB"]:::ext
-    WS ~~~ WN["도구 정의 1벌, 모든 구현이 같은 도구를 씀"]:::note
-  end
-  subgraph WITHOUT["MCP 없이"]
-    direction TB
-    O1["직접 구현"]:::todo --> R1["도구 래퍼"]:::todo
-    O2["pydantic-ai"]:::todo --> R2["도구 래퍼"]:::todo
-    O3["LangGraph"]:::todo --> R3["도구 래퍼"]:::todo
-    R1 & R2 & R3 --> PY["공통 Python 함수 (도구 로직)"]:::done
-    PY --> OS["공고 사이트 · API · DB"]:::ext
-    OS ~~~ ON["래퍼가 구현마다 1벌, 도구 설명이 어긋날 수 있음"]:::note
-  end
-  WITH ~~~ WITHOUT
-
-classDef done fill:#e8f0fc,stroke:#2f6fd6,stroke-width:2px,color:#1f1f1f
-classDef todo fill:#fff4dc,stroke:#f0a800,stroke-width:2px,color:#1f1f1f
-classDef later fill:#fffbf2,stroke:#f0a800,stroke-width:2px,stroke-dasharray:6 4,color:#1f1f1f
-classDef ext fill:#ffffff,stroke:#b5b5ad,color:#1f1f1f
-classDef code fill:#ececea,stroke:#d6d6d2,color:#1f1f1f
-classDef fake fill:#ffffff,stroke:#b5b5ad,stroke-dasharray:5 4,color:#1f1f1f
-classDef note fill:none,stroke:none,color:#555555
-```
+![MCP 서버 · 회의에서 정함](img/llm4-mcp.svg)
 
 - **둘 때:** 도구의 이름·설명·입력 형식이 한 곳에 있어서 모든 구현이 똑같은 도구를 씀. 직접 구현(SDK)도 MCP 클라이언트로 붙일 수 있음
 - **안 둘 때:** 도구 로직은 Python 함수로 공유하고, 프레임워크마다 도구 래퍼를 따로 만듦. 래퍼 코드는 짧지만, 도구 설명이 조금씩 달라지면 점수 차이가 agent 때문인지 도구 설명 때문인지 구분하기 어려움
@@ -220,36 +114,7 @@ classDef note fill:none,stroke:none,color:#555555
 
 모델을 어디서 바꾸고 API 키를 어디에 둘지 정함. 구현이 여러 개면 구현마다 모델 설정 방식이 달라서 이 선택의 영향이 커짐.
 
-*라이브러리는 호출 형식을, 프록시는 키와 설정까지 한 곳에 모음* <sub>(주황 미정(회의에서 정함) · 흰색 외부)</sub>
-
-```mermaid
-%%{init: {"theme": "base", "themeVariables": {"fontSize": "14px", "lineColor": "#9a9a92", "clusterBkg": "#f4f4f2", "clusterBorder": "#dcdcd6", "edgeLabelBackground": "#ffffff", "primaryTextColor": "#1f1f1f"}, "flowchart": {"wrappingWidth": 400}}}%%
-flowchart TB
-  subgraph A["A. 프레임워크 기본 기능"]
-    direction LR
-    A1["구현 3개"]:::todo --> A2["구현별 모델 설정<br/>설정 방식이 구현마다 다름"]:::todo -->|직접 호출| A3["제공자 API<br/>Claude·OpenAI 등"]:::ext
-    A3 ~~~ AK["LiteLLM 없음 · 현재 PoC<br/>추가 프로세스 없음<br/>키: 구현이 도는 프로세스마다 환경변수로 둠"]:::note
-  end
-  subgraph B["B. LiteLLM 라이브러리"]
-    direction LR
-    B1["구현 3개"]:::todo --> B2["연동 패키지<br/>pydantic-ai-litellm 등"]:::todo --> B3["LiteLLM 라이브러리<br/>각 프로세스 안에서 실행"]:::todo --> B4["제공자 API<br/>Claude·OpenAI 등"]:::ext
-    B4 ~~~ BK["추가 프로세스 없음<br/>키: 구현이 도는 프로세스마다 환경변수로 둠<br/>직접 구현은 연동 패키지 없이 acompletion()을 바로 부름"]:::note
-  end
-  subgraph C["C. LiteLLM 프록시"]
-    direction LR
-    C1["구현 3개"]:::todo --> C2["OpenAI 호환 클라이언트<br/>프레임워크에 내장"]:::todo --> C3["LiteLLM 프록시<br/>별도 서버 · 설정은 YAML"]:::todo --> C4["제공자 API<br/>Claude·OpenAI 등"]:::ext
-    C4 ~~~ CK["프록시 서버 1개 추가<br/>키: 프록시에만 둠<br/>앱은 프록시 주소(와 가상 키)만 앎"]:::note
-  end
-  A ~~~ B ~~~ C
-
-classDef done fill:#e8f0fc,stroke:#2f6fd6,stroke-width:2px,color:#1f1f1f
-classDef todo fill:#fff4dc,stroke:#f0a800,stroke-width:2px,color:#1f1f1f
-classDef later fill:#fffbf2,stroke:#f0a800,stroke-width:2px,stroke-dasharray:6 4,color:#1f1f1f
-classDef ext fill:#ffffff,stroke:#b5b5ad,color:#1f1f1f
-classDef code fill:#ececea,stroke:#d6d6d2,color:#1f1f1f
-classDef fake fill:#ffffff,stroke:#b5b5ad,stroke-dasharray:5 4,color:#1f1f1f
-classDef note fill:none,stroke:none,color:#555555
-```
+![모델과 키 · 회의에서 정함](img/llm5-model.svg)
 
 ### LiteLLM이 하는 일
 
