@@ -13,12 +13,12 @@
     <text x="720" y="78" text-anchor="end" font-size="11.5" fill="#52514e">추가 프로세스 없음 · 현재 PoC</text>
     <g id="a-impl">
       <rect x="40" y="90" width="130" height="48" rx="8" fill="#fab219" fill-opacity="0.1" stroke="#fab219" stroke-width="1.75"/>
-      <text x="105" y="118" text-anchor="middle" font-weight="600" fill="#141413">구현 3개</text>
+      <text x="105" y="118" text-anchor="middle" font-weight="600" fill="#141413">pydantic-ai</text>
     </g>
     <g id="a-config">
       <rect x="202" y="90" width="170" height="48" rx="8" fill="#fab219" fill-opacity="0.1" stroke="#fab219" stroke-width="1.75"/>
-      <text x="287" y="110" text-anchor="middle" font-weight="600" fill="#141413">구현별 모델 설정</text>
-      <text x="287" y="127" text-anchor="middle" font-size="11.5" fill="#52514e">설정 방식이 구현마다 다름</text>
+      <text x="287" y="110" text-anchor="middle" font-weight="600" fill="#141413">제공자 SDK 연결</text>
+      <text x="287" y="127" text-anchor="middle" font-size="11.5" fill="#52514e">모델 문자열로 고름</text>
     </g>
     <g id="a-provider">
       <rect x="606" y="90" width="130" height="48" rx="8" fill="none" stroke="#c3c2b7" stroke-width="1.25"/>
@@ -30,7 +30,7 @@
       <path d="M372 114H606" marker-end="url(#llm-arrow)"/>
     </g>
     <text x="489" y="106" text-anchor="middle" font-size="11.5" fill="#52514e">직접 호출</text>
-    <text x="40" y="156" font-size="11.5" fill="#141413">키: 구현이 도는 프로세스마다 환경변수로 둠</text>
+    <text x="40" y="156" font-size="11.5" fill="#141413">키: 앱 프로세스에 환경변수로 둠</text>
   </g>
   <g id="band-b">
     <rect x="24" y="180" width="712" height="112" rx="8" fill="none" stroke="#e6e6e6" stroke-width="1.25"/>
@@ -38,17 +38,17 @@
     <text x="720" y="202" text-anchor="end" font-size="11.5" fill="#52514e">추가 프로세스 없음</text>
     <g id="b-impl">
       <rect x="40" y="214" width="130" height="48" rx="8" fill="#fab219" fill-opacity="0.1" stroke="#fab219" stroke-width="1.75"/>
-      <text x="105" y="242" text-anchor="middle" font-weight="600" fill="#141413">구현 3개</text>
+      <text x="105" y="242" text-anchor="middle" font-weight="600" fill="#141413">pydantic-ai</text>
     </g>
     <g id="b-bridge">
       <rect x="202" y="214" width="170" height="48" rx="8" fill="#fab219" fill-opacity="0.1" stroke="#fab219" stroke-width="1.75"/>
       <text x="287" y="234" text-anchor="middle" font-weight="600" fill="#141413">연동 패키지</text>
-      <text x="287" y="251" text-anchor="middle" font-size="11.5" fill="#52514e">pydantic-ai-litellm 등</text>
+      <text x="287" y="251" text-anchor="middle" font-size="11.5" fill="#52514e">pydantic-ai-litellm</text>
     </g>
     <g id="b-litellm">
       <rect x="404" y="214" width="170" height="48" rx="8" fill="#fab219" fill-opacity="0.1" stroke="#fab219" stroke-width="1.75"/>
       <text x="489" y="234" text-anchor="middle" font-weight="600" fill="#141413">LiteLLM 라이브러리</text>
-      <text x="489" y="251" text-anchor="middle" font-size="11.5" fill="#52514e">각 프로세스 안에서 실행</text>
+      <text x="489" y="251" text-anchor="middle" font-size="11.5" fill="#52514e">앱 프로세스 안에서 실행</text>
     </g>
     <g id="b-provider">
       <rect x="606" y="214" width="130" height="48" rx="8" fill="none" stroke="#c3c2b7" stroke-width="1.25"/>
@@ -60,7 +60,7 @@
       <path d="M372 238H404" marker-end="url(#llm-arrow)"/>
       <path d="M574 238H606" marker-end="url(#llm-arrow)"/>
     </g>
-    <text x="40" y="280" font-size="11.5" fill="#141413">키: 구현이 도는 프로세스마다 환경변수로 둠 · 직접 구현은 연동 패키지 없이 acompletion()을 바로 부름</text>
+    <text x="40" y="280" font-size="11.5" fill="#141413">키: 앱 프로세스에 환경변수로 둠</text>
   </g>
   <g id="band-c">
     <rect x="24" y="304" width="712" height="112" rx="8" fill="none" stroke="#e6e6e6" stroke-width="1.25"/>
@@ -68,12 +68,12 @@
     <text x="720" y="326" text-anchor="end" font-size="11.5" fill="#52514e">프록시 서버 1개 추가</text>
     <g id="c-impl">
       <rect x="40" y="338" width="130" height="48" rx="8" fill="#fab219" fill-opacity="0.1" stroke="#fab219" stroke-width="1.75"/>
-      <text x="105" y="366" text-anchor="middle" font-weight="600" fill="#141413">구현 3개</text>
+      <text x="105" y="366" text-anchor="middle" font-weight="600" fill="#141413">pydantic-ai</text>
     </g>
     <g id="c-client">
       <rect x="202" y="338" width="170" height="48" rx="8" fill="#fab219" fill-opacity="0.1" stroke="#fab219" stroke-width="1.75"/>
       <text x="287" y="358" text-anchor="middle" font-weight="600" fill="#141413">OpenAI 호환 클라이언트</text>
-      <text x="287" y="375" text-anchor="middle" font-size="11.5" fill="#52514e">프레임워크에 내장</text>
+      <text x="287" y="375" text-anchor="middle" font-size="11.5" fill="#52514e">pydantic-ai에 내장</text>
     </g>
     <g id="proxy-box">
       <rect x="404" y="338" width="170" height="48" rx="8" fill="#fab219" fill-opacity="0.1" stroke="#fab219" stroke-width="1.75"/>

@@ -1,0 +1,62 @@
+<!-- 색: 파랑 #2a78d6 = 확정 · 주황 #fab219 = 미정 · 주황 점선(stroke-dasharray) = 추후 · 회색 #c3c2b7 = 선·외부 · 배경 #ededec -->
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="364" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif" viewBox="0 0 760 364" role="img" aria-label="pydantic-ai는 agent 실행을 맡고, 흐름 · 스키마 · 출처는 우리 코드임" font-size="13">
+  <rect width="100%" height="100%" rx="8" fill="#ffffff"/>
+  <defs>
+    <marker id="fw-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" fill="#c3c2b7"/>
+    </marker>
+  </defs>
+  <text x="24" y="32" font-size="15" font-weight="600" fill="#141413">pydantic-ai는 agent 실행을 맡고, 흐름 · 스키마 · 출처는 우리 코드임</text>
+  <g id="legend">
+    <rect x="24" y="46" width="16" height="12" rx="3" fill="#ededec"/>
+    <text x="48" y="56" font-size="11.5" fill="#52514e">우리 코드</text>
+    <rect x="124" y="46" width="16" height="12" rx="3" fill="#fab219" fill-opacity="0.1" stroke="#fab219" stroke-width="1.5"/>
+    <text x="148" y="56" font-size="11.5" fill="#52514e">pydantic-ai (회의에서 확정)</text>
+    <rect x="330" y="46" width="16" height="12" rx="3" fill="none" stroke="#c3c2b7" stroke-width="1.25"/>
+    <text x="354" y="56" font-size="11.5" fill="#52514e">외부</text>
+  </g>
+  <g id="connectors" fill="none" stroke="#c3c2b7" stroke-width="1.25">
+    <path d="M224 110H300" marker-end="url(#fw-arrow)"/>
+    <path d="M224 182H300" stroke-dasharray="4 3" marker-end="url(#fw-arrow)"/>
+    <path d="M570 158H604" marker-end="url(#fw-arrow)"/>
+    <path d="M224 288H604" marker-end="url(#fw-arrow)"/>
+  </g>
+  <text x="262" y="102" text-anchor="middle" font-size="11.5" fill="#52514e">agent 실행</text>
+  <text x="262" y="174" text-anchor="middle" font-size="11.5" fill="#52514e">출력 형식</text>
+  <text x="414" y="280" text-anchor="middle" font-size="11.5" fill="#52514e">API 호출 · 스크랩</text>
+  <g id="flow">
+    <rect x="24" y="84" width="200" height="52" rx="8" fill="#ededec"/>
+    <text x="124" y="106" text-anchor="middle" font-weight="600" fill="#141413">흐름 · 병렬</text>
+    <text x="124" y="124" text-anchor="middle" font-size="11.5" fill="#52514e">run_matching · asyncio</text>
+  </g>
+  <g id="schema">
+    <rect x="24" y="156" width="200" height="52" rx="8" fill="#ededec"/>
+    <text x="124" y="178" text-anchor="middle" font-weight="600" fill="#141413">도메인 스키마</text>
+    <text x="124" y="196" text-anchor="middle" font-size="11.5" fill="#52514e">이력 · JD · 매칭 결과</text>
+  </g>
+  <g id="sources">
+    <rect x="24" y="262" width="200" height="52" rx="8" fill="#ededec"/>
+    <text x="124" y="284" text-anchor="middle" font-weight="600" fill="#141413">출처 어댑터</text>
+    <text x="124" y="302" text-anchor="middle" font-size="11.5" fill="#52514e">Greenhouse · 연방고용청 등</text>
+  </g>
+  <g id="framework">
+    <rect x="300" y="76" width="270" height="164" rx="8" fill="#fab219" fill-opacity="0.1" stroke="#fab219" stroke-width="1.75"/>
+    <text x="316" y="100" font-weight="600" fill="#141413">pydantic-ai</text>
+    <text x="316" y="126" font-size="12" fill="#141413">Agent = 지시문 + 출력 형식 + 도구</text>
+    <text x="316" y="150" font-size="12" fill="#141413">출력 형식 검증, 틀리면 다시 요청</text>
+    <text x="316" y="174" font-size="12" fill="#141413">호출 · 토큰 상한 (UsageLimits)</text>
+    <text x="316" y="198" font-size="12" fill="#141413">도구 호출 반복 (도구를 줄 때)</text>
+    <text x="316" y="222" font-size="12" fill="#141413">모델 연결 (모델 문자열)</text>
+  </g>
+  <g id="ext-llm">
+    <rect x="604" y="132" width="132" height="52" rx="8" fill="none" stroke="#c3c2b7" stroke-width="1.25"/>
+    <text x="670" y="154" text-anchor="middle" font-weight="600" fill="#141413">LLM 제공사</text>
+    <text x="670" y="172" text-anchor="middle" font-size="11.5" fill="#52514e">Claude · OpenAI 등</text>
+  </g>
+  <g id="ext-sites">
+    <rect x="604" y="262" width="132" height="52" rx="8" fill="none" stroke="#c3c2b7" stroke-width="1.25"/>
+    <text x="670" y="284" text-anchor="middle" font-weight="600" fill="#141413">공고 사이트</text>
+    <text x="670" y="302" text-anchor="middle" font-size="11.5" fill="#52514e">API · 스크랩</text>
+  </g>
+  <text x="24" y="346" font-size="11.5" fill="#52514e">LangGraph를 쓰면 흐름(순서 · 분기 · 체크포인트)도 그래프로 프레임워크가 맡음</text>
+</svg>

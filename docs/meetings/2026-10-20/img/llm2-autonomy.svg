@@ -113,5 +113,5 @@
     </g>
     <text x="528" y="410" font-size="11.5" fill="#52514e">포트: 일 단위 · match() 하나</text>
   </g>
-  <text x="24" y="448" font-size="11.5" fill="#52514e">각 포트는 프레임워크별 어댑터(pydantic-ai, LangGraph 등)로 구현함 (LLM-3)</text>
+  <text x="24" y="448" font-size="11.5" fill="#52514e">각 포트는 pydantic-ai 어댑터로 구현함 (LLM-3)</text>
 </svg>

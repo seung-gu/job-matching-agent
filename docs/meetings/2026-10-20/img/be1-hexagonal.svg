@@ -31,8 +31,6 @@
     <path d="M600 424V284" marker-end="url(#hex-arrow)"/>
     <path d="M636 436H688V518" marker-end="url(#hex-arrow)"/>
     <path d="M522 436H546" marker-end="url(#hex-arrow)"/>
-    <path d="M536 436V500H546" marker-end="url(#hex-arrow)"/>
-    <path d="M536 468H546" marker-end="url(#hex-arrow)"/>
     <path d="M74 174V488H151" marker-end="url(#hex-arrow)"/>
     <path d="M74 268H159" marker-end="url(#hex-arrow)"/>
     <path d="M217 268H248V356" marker-end="url(#hex-arrow)"/>
@@ -76,10 +74,6 @@
   <g id="agent-adapters">
     <rect x="548" y="424" width="88" height="24" rx="6" fill="#2a78d6" fill-opacity="0.12" stroke="#2a78d6" stroke-width="1.5"/>
     <text x="592" y="440" text-anchor="middle" fill="#141413">pydantic-ai</text>
-    <rect x="548" y="456" width="76" height="24" rx="6" fill="#fab219" fill-opacity="0.12" stroke="#fab219" stroke-width="1.5"/>
-    <text x="586" y="472" text-anchor="middle" fill="#141413">LangGraph</text>
-    <rect x="548" y="488" width="70" height="24" rx="6" fill="#fab219" fill-opacity="0.12" stroke="#fab219" stroke-width="1.5"/>
-    <text x="583" y="504" text-anchor="middle" fill="#141413">직접 구현</text>
   </g>
   <g id="driving">
     <rect x="161" y="254" width="56" height="28" rx="6" fill="#2a78d6" fill-opacity="0.12" stroke="#2a78d6" stroke-width="1.5"/>

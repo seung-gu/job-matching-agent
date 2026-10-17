@@ -83,6 +83,6 @@ PoC는 각자 로컬에서 실행함. 팀이 같이 쓰거나 밖에 보여 주�
 
 | 정할 것 | 선택지 | 참고 | 결정 |
 | --- | --- | --- | --- |
-| LLM 호출 기록 도구 | Logfire / Langfuse / LangSmith / 안 둠 | LLM-3 구현 비교에도 씀 |  |
+| LLM 호출 기록 도구 | Logfire / Langfuse / LangSmith / 안 둠 | LLM-3 프레임워크 (Logfire는 pydantic-ai 연동) |  |
 | 로그·지표 | 클라우드 기본 기능 / 별도 도구 | 3번 배포 대상 |  |
 | 알림 기준 | 실패율, 일일 비용 상한 등 | LLM-5 API 키 |  |

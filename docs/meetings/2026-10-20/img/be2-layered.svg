@@ -46,12 +46,8 @@
     <path d="M276 92V126" marker-end="url(#layer-arrow)"/>
     <path d="M224 156V212" marker-end="url(#layer-arrow)"/>
     <path d="M276 156V212" marker-end="url(#layer-arrow)"/>
-    <path d="M284 234H292"/>
-    <path d="M292 216V280"/>
-    <path d="M292 216H302" marker-end="url(#layer-arrow)"/>
-    <path d="M292 248H302" marker-end="url(#layer-arrow)"/>
-    <path d="M292 280H302" marker-end="url(#layer-arrow)"/>
-    <path d="M340 292V348" marker-end="url(#layer-arrow)"/>
+    <path d="M284 234H292V216H302" marker-end="url(#layer-arrow)"/>
+    <path d="M340 228V348" marker-end="url(#layer-arrow)"/>
     <path d="M376 364H392" marker-end="url(#layer-arrow)"/>
     <path d="M394 340V388"/>
     <path d="M228 254V334" stroke-dasharray="4 3" marker-end="url(#layer-arrow)"/>
@@ -85,10 +81,6 @@
   <g id="agents">
     <rect x="304" y="204" width="88" height="24" rx="6" fill="#2a78d6" fill-opacity="0.12" stroke="#2a78d6" stroke-width="1.5"/>
     <text x="348" y="220" text-anchor="middle" fill="#141413">pydantic-ai</text>
-    <rect x="304" y="236" width="76" height="24" rx="6" fill="#fab219" fill-opacity="0.12" stroke="#fab219" stroke-width="1.5"/>
-    <text x="342" y="252" text-anchor="middle" fill="#141413">LangGraph</text>
-    <rect x="304" y="268" width="70" height="24" rx="6" fill="#fab219" fill-opacity="0.12" stroke="#fab219" stroke-width="1.5"/>
-    <text x="339" y="284" text-anchor="middle" fill="#141413">직접 구현</text>
   </g>
   <g id="db-code">
     <rect x="196" y="336" width="64" height="24" rx="6" fill="#fab219" fill-opacity="0.04" stroke="#fab219" stroke-width="1.5" stroke-dasharray="4 3"/>

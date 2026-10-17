@@ -24,12 +24,8 @@
     <path d="M530 176H565" stroke-dasharray="5 4" marker-end="url(#overview-arrow)"/>
     <path d="M380 124V150" marker-end="url(#overview-arrow)"/>
     <path d="M380 202V230" marker-end="url(#overview-arrow)"/>
-    <path d="M380 282V296H220V310" marker-end="url(#overview-arrow)"/>
-    <path d="M380 296V310" marker-end="url(#overview-arrow)"/>
-    <path d="M380 296H540V310" marker-end="url(#overview-arrow)"/>
-    <path d="M220 362V384"/>
+    <path d="M380 282V310" marker-end="url(#overview-arrow)"/>
     <path d="M380 362V384"/>
-    <path d="M540 362V384"/>
     <path d="M170 384H590"/>
     <path d="M170 384V404" marker-end="url(#overview-arrow)"/>
     <path d="M590 384V404" marker-end="url(#overview-arrow)"/>
@@ -63,23 +59,15 @@
     <rect x="210" y="230" width="340" height="52" rx="8" fill="#fab219" fill-opacity="0.1" stroke="#fab219" stroke-width="1.75"/>
     <rect x="214" y="245" width="40" height="22" rx="11" fill="#fab219" fill-opacity="0.22" stroke="#fab219" stroke-width="2"/>
     <text x="234" y="260" text-anchor="middle" font-size="11.5" font-weight="700" fill="#141413">LLM</text>
-    <text x="392" y="252" text-anchor="middle" font-weight="600" fill="#141413">포트 match(): 구현 3개 비교</text>
+    <text x="392" y="252" text-anchor="middle" font-weight="600" fill="#141413">agent 포트</text>
     <text x="392" y="270" text-anchor="middle" font-size="11.5" fill="#52514e">범위는 회의에서 (일 단위 · 역할 단위)</text>
   </g>
-  <g id="adapter-plain">
-    <rect x="148" y="310" width="144" height="52" rx="8" fill="#2a78d6" fill-opacity="0.1" stroke="#2a78d6" stroke-width="1.75"/>
-    <text x="220" y="332" text-anchor="middle" font-weight="600" fill="#141413">직접 구현</text>
-    <text x="220" y="350" text-anchor="middle" font-size="11.5" fill="#52514e">SDK + 코드</text>
-  </g>
-  <g id="adapter-a">
-    <rect x="308" y="310" width="144" height="52" rx="8" fill="#2a78d6" fill-opacity="0.1" stroke="#2a78d6" stroke-width="1.75"/>
-    <text x="380" y="332" text-anchor="middle" font-weight="600" fill="#141413">pydantic-ai</text>
-    <text x="380" y="350" text-anchor="middle" font-size="11.5" fill="#52514e">타입 기반 agent</text>
-  </g>
-  <g id="adapter-b">
-    <rect x="468" y="310" width="144" height="52" rx="8" fill="#2a78d6" fill-opacity="0.1" stroke="#2a78d6" stroke-width="1.75"/>
-    <text x="540" y="332" text-anchor="middle" font-weight="600" fill="#141413">LangGraph</text>
-    <text x="540" y="350" text-anchor="middle" font-size="11.5" fill="#52514e">그래프 워크플로</text>
+  <g id="adapter">
+    <rect x="260" y="310" width="240" height="52" rx="8" fill="#fab219" fill-opacity="0.1" stroke="#fab219" stroke-width="1.75"/>
+    <rect x="264" y="325" width="40" height="22" rx="11" fill="#fab219" fill-opacity="0.22" stroke="#fab219" stroke-width="2"/>
+    <text x="284" y="340" text-anchor="middle" font-size="11.5" font-weight="700" fill="#141413">LLM</text>
+    <text x="392" y="332" text-anchor="middle" font-weight="600" fill="#141413">pydantic-ai</text>
+    <text x="392" y="350" text-anchor="middle" font-size="11.5" fill="#52514e">프레임워크 하나 · 회의에서 확정</text>
   </g>
   <g id="model">
     <rect x="50" y="404" width="240" height="52" rx="8" fill="#fab219" fill-opacity="0.1" stroke="#fab219" stroke-width="1.75"/>
